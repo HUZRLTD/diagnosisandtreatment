@@ -19,13 +19,14 @@
 				column-gap: 3em !important;
 				row-gap: 3em !important;
 				margin: 1.5em 0 2em 0 !important;
+				min-height: 50px;
 			}
 			
 			.video-grid .video-item {
 				width: auto !important;
 				margin: 0 !important;
 				padding: 0 !important;
-				transition: opacity 0.2s ease;
+				transition: all 0.3s ease;
 			}
 			
 			@media screen and (max-width: 980px) {
@@ -68,7 +69,8 @@
 				height: 100%;
 				border: 0;
 			}
-			/* Theme matching red play button overlay overlay */
+			
+			/* Theme matching red play button overlay */
 			.play-overlay {
 				position: absolute;
 				top: 50%;
@@ -90,8 +92,7 @@
 				width: 22px;
 				height: 22px;
 				fill: #ffffff;
-				margin-left: 4px; /* Slight offset to visually center the triangle play icon */
-				transition: fill 0.25s ease;
+				margin-left: 4px; /* Visual center adjustment */
 			}
 			.video-wrapper:hover .play-overlay {
 				background: #3f3f3f;
@@ -99,26 +100,71 @@
 				box-shadow: 0 6px 15px rgba(0,0,0,0.3);
 			}
 
-			/* Dynamic Progressive Loader Layout */
-			.progress-container {
-				background: #f5f5f5;
+			/* Skeleton Loaders (Clean Placeholders) */
+			.skeleton-card {
+				animation: pulse 1.5s infinite ease-in-out;
+			}
+			.skeleton-video {
+				padding-bottom: 56.25%;
+				background: #e5e7eb;
 				border-radius: 0.375em;
-				padding: 1.5em;
+				margin-bottom: 1.25em;
+			}
+			.skeleton-text {
+				height: 1.25em;
+				background: #e5e7eb;
+				border-radius: 0.25em;
+				width: 75%;
+			}
+			@keyframes pulse {
+				0% { opacity: 0.6; }
+				50% { opacity: 1; }
+				100% { opacity: 0.6; }
+			}
+
+			/* Inline Silent Status Badge next to Search */
+			.search-header-group {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				flex-wrap: wrap;
+				gap: 1.5em;
 				margin-bottom: 2.5em;
-				border: 1px dashed #dbdbdb;
 			}
-			.progress-bar-outer {
-				background: #e0e0e0;
-				border-radius: 10px;
-				height: 12px;
-				overflow: hidden;
-				margin: 1em 0;
+			.search-filter-container {
+				flex-grow: 1;
+				max-width: 600px;
+				margin: 0;
 			}
-			.progress-bar-inner {
+			.search-filter-container input[type="text"] {
+				border-radius: 2em;
+				padding-left: 1.5em;
+				height: 3.25em;
+			}
+			
+			/* Tiny pulsing load status indicator */
+			.sync-status {
+				display: flex;
+				align-items: center;
+				gap: 0.5em;
+				font-size: 0.85em;
+				font-weight: 600;
+				color: #7f8c8d;
+				background: #f5f5f5;
+				padding: 0.5em 1em;
+				border-radius: 2em;
+				border: 1px solid #e0e0e0;
+			}
+			.sync-dot {
+				width: 8px;
+				height: 8px;
 				background: #f56a6a;
-				width: 0%;
-				height: 100%;
-				transition: width 0.3s ease;
+				border-radius: 50%;
+				animation: pulse 1.2s infinite ease-in-out;
+			}
+			.sync-status.done .sync-dot {
+				background: #2ecc71;
+				animation: none;
 			}
 
 			/* Chapter Collapsible Accordions */
@@ -170,17 +216,6 @@
 			}
 			.chapter-accordion.active .accordion-content {
 				display: block;
-			}
-
-			/* Search Box */
-			.search-filter-container {
-				margin: 2.5em 0;
-				max-width: 600px;
-			}
-			.search-filter-container input[type="text"] {
-				border-radius: 2em;
-				padding-left: 1.5em;
-				height: 3.25em;
 			}
 
 			/* Disclaimer Layout adjustments */
@@ -248,31 +283,32 @@
 
 									<hr class="major" />
 
-									<!-- Interactive Search Field -->
-									<div class="search-filter-container">
-										<input type="text" id="video-search" placeholder="🔍 Search clinical topics (e.g. Cough, Sleep, History)..." disabled />
-									</div>
-
-									<!-- Metred Progress Bar Indicator -->
-									<div class="progress-container" id="progress-wrapper">
-										<h4 id="progress-text">Initializing Clinical Video Index...</h4>
-										<div class="progress-bar-outer">
-											<div class="progress-bar-inner" id="progress-bar"></div>
+									<!-- Inline Search Header Group -->
+									<div class="search-header-group">
+										<div class="search-filter-container">
+											<input type="text" id="video-search" placeholder="🔍 Search clinical topics..." />
 										</div>
-										<p style="font-size: 0.85em; margin: 0;" id="progress-subtext">Preparing stream handshake with Vimeo servers...</p>
+										<div class="sync-status" id="sync-container">
+											<div class="sync-dot"></div>
+											<span id="sync-text">Indexing videos (0%)...</span>
+										</div>
 									</div>
 
 									<!-- Accordion Group Layout -->
 									<div class="chapters-wrapper">
 										
 										<!-- Chapter 1 -->
-										<div class="chapter-accordion" id="ch1">
+										<div class="chapter-accordion active" id="ch1">
 											<button class="accordion-header">
 												<h3><span class="icon solid fa-comments"></span> Chapter 1: History, Communication &amp; Principles</h3>
 												<span class="video-badge" id="badge-ch1">0 Videos</span>
 											</button>
 											<div class="accordion-content">
-												<div class="video-grid" id="grid-ch1"></div>
+												<div class="video-grid" id="grid-ch1">
+													<!-- Skeletons populated instantly on load -->
+													<div class="skeleton-card"><div class="skeleton-video"></div><div class="skeleton-text"></div></div>
+													<div class="skeleton-card"><div class="skeleton-video"></div><div class="skeleton-text"></div></div>
+												</div>
 											</div>
 										</div>
 
@@ -283,7 +319,10 @@
 												<span class="video-badge" id="badge-ch2">0 Videos</span>
 											</button>
 											<div class="accordion-content">
-												<div class="video-grid" id="grid-ch2"></div>
+												<div class="video-grid" id="grid-ch2">
+													<div class="skeleton-card"><div class="skeleton-video"></div><div class="skeleton-text"></div></div>
+													<div class="skeleton-card"><div class="skeleton-video"></div><div class="skeleton-text"></div></div>
+												</div>
 											</div>
 										</div>
 
@@ -294,7 +333,10 @@
 												<span class="video-badge" id="badge-ch3">0 Videos</span>
 											</button>
 											<div class="accordion-content">
-												<div class="video-grid" id="grid-ch3"></div>
+												<div class="video-grid" id="grid-ch3">
+													<div class="skeleton-card"><div class="skeleton-video"></div><div class="skeleton-text"></div></div>
+													<div class="skeleton-card"><div class="skeleton-video"></div><div class="skeleton-text"></div></div>
+												</div>
 											</div>
 										</div>
 
@@ -305,7 +347,10 @@
 												<span class="video-badge" id="badge-ch4">0 Videos</span>
 											</button>
 											<div class="accordion-content">
-												<div class="video-grid" id="grid-ch4"></div>
+												<div class="video-grid" id="grid-ch4">
+													<div class="skeleton-card"><div class="skeleton-video"></div><div class="skeleton-text"></div></div>
+													<div class="skeleton-card"><div class="skeleton-video"></div><div class="skeleton-text"></div></div>
+												</div>
 											</div>
 										</div>
 
@@ -316,7 +361,10 @@
 												<span class="video-badge" id="badge-ch5">0 Videos</span>
 											</button>
 											<div class="accordion-content">
-												<div class="video-grid" id="grid-ch5"></div>
+												<div class="video-grid" id="grid-ch5">
+													<div class="skeleton-card"><div class="skeleton-video"></div><div class="skeleton-text"></div></div>
+													<div class="skeleton-card"><div class="skeleton-video"></div><div class="skeleton-text"></div></div>
+												</div>
 											</div>
 										</div>
 
@@ -327,7 +375,10 @@
 												<span class="video-badge" id="badge-ch6">0 Videos</span>
 											</button>
 											<div class="accordion-content">
-												<div class="video-grid" id="grid-ch6"></div>
+												<div class="video-grid" id="grid-ch6">
+													<div class="skeleton-card"><div class="skeleton-video"></div><div class="skeleton-text"></div></div>
+													<div class="skeleton-card"><div class="skeleton-video"></div><div class="skeleton-text"></div></div>
+												</div>
 											</div>
 										</div>
 
@@ -338,7 +389,10 @@
 												<span class="video-badge" id="badge-ch7">0 Videos</span>
 											</button>
 											<div class="accordion-content">
-												<div class="video-grid" id="grid-ch7"></div>
+												<div class="video-grid" id="grid-ch7">
+													<div class="skeleton-card"><div class="skeleton-video"></div><div class="skeleton-text"></div></div>
+													<div class="skeleton-card"><div class="skeleton-video"></div><div class="skeleton-text"></div></div>
+												</div>
 											</div>
 										</div>
 
@@ -454,10 +508,8 @@
 					const videoIds = [...new Set(rawVideoIds.filter(id => id !== "109862882"))];
 
 					const searchInput = document.getElementById('video-search');
-					const progressWrapper = document.getElementById('progress-wrapper');
-					const progressBar = document.getElementById('progress-bar');
-					const progressText = document.getElementById('progress-text');
-					const progressSubtext = document.getElementById('progress-subtext');
+					const syncContainer = document.getElementById('sync-container');
+					const syncText = document.getElementById('sync-text');
 
 					// Accordion UI Interactions
 					document.querySelectorAll('.accordion-header').forEach(header => {
@@ -567,13 +619,11 @@
 							loadedMetadata.push(...batchResults);
 							processedCount += batch.length;
 
-							// Display real-time progress to medical officer
+							// Display real-time progress silently in the badge next to search
 							const percent = Math.min(100, Math.floor((processedCount / ids.length) * 100));
-							progressBar.style.width = `${percent}%`;
-							progressText.textContent = `Loading Database: ${percent}% Complete`;
-							progressSubtext.textContent = `Fetched ${processedCount} of ${ids.length} training modules...`;
+							syncText.textContent = `Syncing library (${percent}%)...`;
 
-							// Minute pacing delay to allow Vimeo's API buffer to breath
+							// Minute pacing delay to allow Vimeo's API buffer to breathe
 							await new Promise(resolve => setTimeout(resolve, 80));
 						}
 
@@ -589,6 +639,11 @@
 							numeric: true, 
 							sensitivity: 'base' 
 						}));
+
+						// Clear skeleton cards inside grids
+						document.querySelectorAll('.video-grid').forEach(grid => {
+							grid.innerHTML = '';
+						});
 
 						// Track counts dynamically for accordion headers
 						const chapterCounts = { ch1: 0, ch2: 0, ch3: 0, ch4: 0, ch5: 0, ch6: 0, ch7: 0 };
@@ -647,18 +702,9 @@
 							}
 						}
 
-						// Hide loading screen and enable search feature
-						progressWrapper.style.display = 'none';
-						searchInput.disabled = false;
-						searchInput.placeholder = `🔍 Search ${rawData.length} medical videos dynamically...`;
-
-						// Auto-expand the first chapter that has videos
-						for (const chId in chapterCounts) {
-							if (chapterCounts[chId] > 0) {
-								document.getElementById(chId).classList.add('active');
-								break;
-							}
-						}
+						// Update sync status indicator to done green state
+						syncContainer.classList.add('done');
+						syncText.textContent = `Library synced (${rawData.length} videos)`;
 					}
 
 					// Search Filter Logic
@@ -671,12 +717,15 @@
 							let matchingCount = 0;
 
 							videoItems.forEach(item => {
-								const title = item.querySelector('h3').textContent.toLowerCase();
-								if (title.includes(filterValue)) {
-									item.style.display = 'block';
-									matchingCount++;
-								} else {
-									item.style.display = 'none';
+								const title = item.querySelector('h3');
+								if (title) {
+									const titleText = title.textContent.toLowerCase();
+									if (titleText.includes(filterValue)) {
+										item.style.display = 'block';
+										matchingCount++;
+									} else {
+										item.style.display = 'none';
+									}
 								}
 							});
 
@@ -692,8 +741,6 @@
 							} else {
 								// Restore regular display if query empty
 								accordion.style.display = 'block';
-								// Check if any items inside, otherwise hide
-								const gridId = accordion.querySelector('.video-grid').id;
 								const badgeText = accordion.querySelector('.video-badge').textContent;
 								if (badgeText.startsWith("0 ")) {
 									accordion.style.display = 'none';
