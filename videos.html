@@ -33,28 +33,30 @@
 				border: 0;
 			}
 			
-			/* FIXED: Explicitly define the video grid layout */
+			/* FIXED: Explicitly define the video grid layout and override theme conflicts */
 			#video-grid {
 				display: grid !important; /* Forces layout overrides */
-				grid-template-columns: repeat(2, 1fr); /* Exactly 2 columns on desktop */
-				column-gap: 3em;
-				row-gap: 3em;
-				margin-bottom: 3em;
+				grid-template-columns: repeat(2, 1fr) !important; /* Exactly 2 columns on desktop */
+				column-gap: 3em !important;
+				row-gap: 3em !important;
+				margin: 0 0 3em 0 !important;
+			}
+			
+			#video-grid .video-item {
+				width: auto !important; /* OVERRIDES theme's width calculation which was squishing the video */
+				margin: 0 !important; /* OVERRIDES theme's margin offsets */
+				padding: 0 !important;
+				transition: opacity 0.2s ease;
 			}
 			
 			/* Responsive breakpoint matching Editorial theme width constraints */
 			@media screen and (max-width: 980px) {
 				#video-grid {
-					grid-template-columns: 1fr; /* 1 column on mobile and small tablets */
-					row-gap: 2em;
+					grid-template-columns: 1fr !important; /* 1 column on mobile and small tablets */
+					row-gap: 2em !important;
 				}
 			}
 
-			/* Styling refinement for video grid items */
-			.posts article {
-				margin-bottom: 0; /* Let grid gap manage the spacing */
-				transition: opacity 0.2s ease;
-			}
 			/* Search input customized to match theme branding */
 			.search-filter-container {
 				margin-bottom: 3em;
