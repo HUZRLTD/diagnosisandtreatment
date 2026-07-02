@@ -32,9 +32,27 @@
 				height: 100%;
 				border: 0;
 			}
+			
+			/* FIXED: Explicitly define the video grid layout */
+			#video-grid {
+				display: grid !important; /* Forces layout overrides */
+				grid-template-columns: repeat(2, 1fr); /* Exactly 2 columns on desktop */
+				column-gap: 3em;
+				row-gap: 3em;
+				margin-bottom: 3em;
+			}
+			
+			/* Responsive breakpoint matching Editorial theme width constraints */
+			@media screen and (max-width: 980px) {
+				#video-grid {
+					grid-template-columns: 1fr; /* 1 column on mobile and small tablets */
+					row-gap: 2em;
+				}
+			}
+
 			/* Styling refinement for video grid items */
 			.posts article {
-				margin-bottom: 3em;
+				margin-bottom: 0; /* Let grid gap manage the spacing */
 				transition: opacity 0.2s ease;
 			}
 			/* Search input customized to match theme branding */
@@ -260,7 +278,7 @@
 						const fetchPromises = videoIds.map(id => fetchVideoMetadata(id));
 						const results = await Promise.all(fetchPromises);
 						
-						// FIXED: Sort results using natural alphanumeric sorting
+						// Sort results using natural alphanumeric sorting
 						results.sort((a, b) => a.title.localeCompare(b.title, undefined, { 
 							numeric: true, 
 							sensitivity: 'base' 
