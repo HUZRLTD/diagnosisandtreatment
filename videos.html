@@ -12,8 +12,31 @@
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 		<style>
-			/* Responsive Vimeo Container */
-			.video-container {
+			/* Explicit overrides for the theme columns inside the category grids */
+			.video-grid {
+				display: grid !important;
+				grid-template-columns: repeat(2, 1fr) !important;
+				column-gap: 3em !important;
+				row-gap: 3em !important;
+				margin: 1.5em 0 2em 0 !important;
+			}
+			
+			.video-grid .video-item {
+				width: auto !important;
+				margin: 0 !important;
+				padding: 0 !important;
+				transition: opacity 0.2s ease;
+			}
+			
+			@media screen and (max-width: 980px) {
+				.video-grid {
+					grid-template-columns: 1fr !important;
+					row-gap: 2em !important;
+				}
+			}
+
+			/* Customized Interactive Thumbnail & Play Overlay */
+			.video-wrapper {
 				position: relative;
 				padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
 				height: 0;
@@ -21,10 +44,23 @@
 				max-width: 100%;
 				background: #000;
 				border-radius: 0.375em;
-				margin-bottom: 1.5em;
-				box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+				margin-bottom: 1.25em;
+				box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+				cursor: pointer;
 			}
-			.video-container iframe {
+			.video-wrapper img {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				transition: transform 0.3s ease;
+			}
+			.video-wrapper:hover img {
+				transform: scale(1.03);
+			}
+			.video-wrapper iframe {
 				position: absolute;
 				top: 0;
 				left: 0;
@@ -32,68 +68,125 @@
 				height: 100%;
 				border: 0;
 			}
-			
-			/* FIXED: Explicitly define the video grid layout and override theme conflicts */
-			#video-grid {
-				display: grid !important; /* Forces layout overrides */
-				grid-template-columns: repeat(2, 1fr) !important; /* Exactly 2 columns on desktop */
-				column-gap: 3em !important;
-				row-gap: 3em !important;
-				margin: 0 0 3em 0 !important;
+			/* Theme matching red play button overlay overlay */
+			.play-overlay {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				background: #f56a6a;
+				color: #fff !important;
+				width: 65px;
+				height: 65px;
+				border-radius: 50%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				box-shadow: 0 6px 15px rgba(245, 106, 106, 0.4);
+				transition: all 0.25s ease;
+				z-index: 2;
 			}
-			
-			#video-grid .video-item {
-				width: auto !important; /* OVERRIDES theme's width calculation which was squishing the video */
-				margin: 0 !important; /* OVERRIDES theme's margin offsets */
-				padding: 0 !important;
-				transition: opacity 0.2s ease;
+			.play-overlay svg {
+				width: 22px;
+				height: 22px;
+				fill: #ffffff;
+				margin-left: 4px; /* Slight offset to visually center the triangle play icon */
+				transition: fill 0.25s ease;
 			}
-			
-			/* Responsive breakpoint matching Editorial theme width constraints */
-			@media screen and (max-width: 980px) {
-				#video-grid {
-					grid-template-columns: 1fr !important; /* 1 column on mobile and small tablets */
-					row-gap: 2em !important;
-				}
+			.video-wrapper:hover .play-overlay {
+				background: #3f3f3f;
+				transform: translate(-50%, -50%) scale(1.1);
+				box-shadow: 0 6px 15px rgba(0,0,0,0.3);
 			}
 
-			/* Search input customized to match theme branding */
+			/* Dynamic Progressive Loader Layout */
+			.progress-container {
+				background: #f5f5f5;
+				border-radius: 0.375em;
+				padding: 1.5em;
+				margin-bottom: 2.5em;
+				border: 1px dashed #dbdbdb;
+			}
+			.progress-bar-outer {
+				background: #e0e0e0;
+				border-radius: 10px;
+				height: 12px;
+				overflow: hidden;
+				margin: 1em 0;
+			}
+			.progress-bar-inner {
+				background: #f56a6a;
+				width: 0%;
+				height: 100%;
+				transition: width 0.3s ease;
+			}
+
+			/* Chapter Collapsible Accordions */
+			.chapter-accordion {
+				border: 1px solid #efefef;
+				border-radius: 0.375em;
+				margin-bottom: 1.25em;
+				background: #fafafa;
+				overflow: hidden;
+			}
+			.accordion-header {
+				width: 100%;
+				background: #fff;
+				border: none !important;
+				box-shadow: none !important;
+				padding: 1.25em 1.75em !important;
+				text-align: left;
+				cursor: pointer;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				transition: background 0.2s ease;
+				outline: none;
+			}
+			.accordion-header:hover {
+				background: #fcfcfc;
+			}
+			.accordion-header h3 {
+				margin: 0 !important;
+				font-size: 1.15em;
+				color: #3d4449;
+				display: flex;
+				align-items: center;
+				gap: 0.75em;
+			}
+			.accordion-header .video-badge {
+				background: #7f8c8d;
+				color: #fff;
+				font-size: 0.8em;
+				padding: 0.25em 0.8em;
+				border-radius: 10px;
+				font-weight: 600;
+			}
+			.accordion-content {
+				display: none; /* Controlled via script toggle */
+				padding: 1.75em;
+				background: #fff;
+				border-top: 1px solid #efefef;
+			}
+			.chapter-accordion.active .accordion-content {
+				display: block;
+			}
+
+			/* Search Box */
 			.search-filter-container {
-				margin-bottom: 3em;
+				margin: 2.5em 0;
 				max-width: 600px;
-				position: relative;
 			}
 			.search-filter-container input[type="text"] {
 				border-radius: 2em;
 				padding-left: 1.5em;
 				height: 3.25em;
 			}
-			/* Loading Spinner styles */
-			#loading-spinner {
-				display: flex;
-				flex-direction: column;
-				align-items: center;
-				justify-content: center;
-				padding: 5em 0;
-				width: 100%;
-			}
-			.spinner {
-				width: 50px;
-				height: 50px;
-				border: 5px solid #f3f3f3;
-				border-top: 5px solid #f56a6a; /* Theme matching red accent color */
-				border-radius: 50%;
-				animation: spin 1s linear infinite;
-				margin-bottom: 1.5em;
-			}
-			@keyframes spin {
-				0% { transform: rotate(0deg); }
-				100% { transform: rotate(360deg); }
-			}
-			/* Disclaimer Box Styling */
+
+			/* Disclaimer Layout adjustments */
 			.disclaimer-box {
 				border: 1px solid #dbdbdb;
-				border-left: 4px solid #f56a6a; /* Theme main color accent */
+				border-left: 4px solid #f56a6a;
 				background-color: rgba(245, 106, 106, 0.02);
 				padding: 1.75em;
 				border-radius: 0.375em;
@@ -155,19 +248,101 @@
 
 									<hr class="major" />
 
-									<!-- Interactive Video Search Filter -->
+									<!-- Interactive Search Field -->
 									<div class="search-filter-container">
-										<input type="text" id="video-search" placeholder="🔍 Search training videos..." disabled />
+										<input type="text" id="video-search" placeholder="🔍 Search clinical topics (e.g. Cough, Sleep, History)..." disabled />
 									</div>
 
-									<!-- Loading Indicator -->
-									<div id="loading-spinner">
-										<div class="spinner"></div>
-										<p>Loading clinical video database from Vimeo...</p>
+									<!-- Metred Progress Bar Indicator -->
+									<div class="progress-container" id="progress-wrapper">
+										<h4 id="progress-text">Initializing Clinical Video Index...</h4>
+										<div class="progress-bar-outer">
+											<div class="progress-bar-inner" id="progress-bar"></div>
+										</div>
+										<p style="font-size: 0.85em; margin: 0;" id="progress-subtext">Preparing stream handshake with Vimeo servers...</p>
 									</div>
 
-									<!-- Video Grid (Populated dynamically) -->
-									<div class="posts" id="video-grid" style="display: none;"></div>
+									<!-- Accordion Group Layout -->
+									<div class="chapters-wrapper">
+										
+										<!-- Chapter 1 -->
+										<div class="chapter-accordion" id="ch1">
+											<button class="accordion-header">
+												<h3><span class="icon solid fa-comments"></span> Chapter 1: History, Communication &amp; Principles</h3>
+												<span class="video-badge" id="badge-ch1">0 Videos</span>
+											</button>
+											<div class="accordion-content">
+												<div class="video-grid" id="grid-ch1"></div>
+											</div>
+										</div>
+
+										<!-- Chapter 2 -->
+										<div class="chapter-accordion" id="ch2">
+											<button class="accordion-header">
+												<h3><span class="icon solid fa-microscope"></span> Chapter 2: Infectious Diseases &amp; Fevers</h3>
+												<span class="video-badge" id="badge-ch2">0 Videos</span>
+											</button>
+											<div class="accordion-content">
+												<div class="video-grid" id="grid-ch2"></div>
+											</div>
+										</div>
+
+										<!-- Chapter 3 -->
+										<div class="chapter-accordion" id="ch3">
+											<button class="accordion-header">
+												<h3><span class="icon solid fa-lungs"></span> Chapter 3: Respiratory &amp; Cardio</h3>
+												<span class="video-badge" id="badge-ch3">0 Videos</span>
+											</button>
+											<div class="accordion-content">
+												<div class="video-grid" id="grid-ch3"></div>
+											</div>
+										</div>
+
+										<!-- Chapter 4 -->
+										<div class="chapter-accordion" id="ch4">
+											<button class="accordion-header">
+												<h3><span class="icon solid fa-apple-alt"></span> Chapter 4: Nutrition, Lifestyle &amp; Sleep</h3>
+												<span class="video-badge" id="badge-ch4">0 Videos</span>
+											</button>
+											<div class="accordion-content">
+												<div class="video-grid" id="grid-ch4"></div>
+											</div>
+										</div>
+
+										<!-- Chapter 5 -->
+										<div class="chapter-accordion" id="ch5">
+											<button class="accordion-header">
+												<h3><span class="icon solid fa-baby"></span> Chapter 5: Pediatrics &amp; Under 5s</h3>
+												<span class="video-badge" id="badge-ch5">0 Videos</span>
+											</button>
+											<div class="accordion-content">
+												<div class="video-grid" id="grid-ch5"></div>
+											</div>
+										</div>
+
+										<!-- Chapter 6 -->
+										<div class="chapter-accordion" id="ch6">
+											<button class="accordion-header">
+												<h3><span class="icon solid fa-venus-mars"></span> Chapter 6: Maternal, Gynecologic &amp; Adolescent Health</h3>
+												<span class="video-badge" id="badge-ch6">0 Videos</span>
+											</button>
+											<div class="accordion-content">
+												<div class="video-grid" id="grid-ch6"></div>
+											</div>
+										</div>
+
+										<!-- Chapter 7 -->
+										<div class="chapter-accordion" id="ch7">
+											<button class="accordion-header">
+												<h3><span class="icon solid fa-user-md"></span> Chapter 7: Other Clinical Practice Scenarios</h3>
+												<span class="video-badge" id="badge-ch7">0 Videos</span>
+											</button>
+											<div class="accordion-content">
+												<div class="video-grid" id="grid-ch7"></div>
+											</div>
+										</div>
+
+									</div>
 
 								</section>
 
@@ -211,11 +386,11 @@
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
 
-			<!-- Dynamic Vimeo Video Loader & Live Filter -->
+			<!-- Dynamic Vimeo Video Loader, Smart Categorizer & Natural Sort -->
 			<script>
 				document.addEventListener('DOMContentLoaded', function() {
-					// All 55 unique Vimeo IDs harvested from your repository dump
-					const videoIds = [
+					// Complete 284 unique Vimeo IDs derived cleanly from repository logs
+					const rawVideoIds = [
 						"1206382169", "1205541646", "1205541608", "1205365879", "1205365892",
 						"1192851999", "1192852121", "1196556893", "1192852208", "1192852240",
 						"1192852277", "1192852316", "1192852424", "1192852453", "1192852494",
@@ -226,103 +401,309 @@
 						"1195380844", "1196775745", "1196775894", "1196776066", "1196776148",
 						"1196776292", "1196776437", "1196776563", "1196776699", "1197110479",
 						"1197110537", "1197110626", "1197110716", "1197110784", "1197110850",
-						"1197110923", "1197110961", "1197111023", "1197799171", "1197799350"
+						"1197110923", "1197110961", "1197111023", "1197799171", "1197799350",
+						"1197799468", "1197799619", "1197799772", "1197799927", "1197800036",
+						"1197800159", "1197800270", "1197800649", "1197800790", "1197800904",
+						"1197800981", "1197803148", "1197803191", "1197803251", "1197803285",
+						"1197803332", "1197803381", "1198761299", "1198762098", "1198762358",
+						"1198762644", "1199000734", "1199000858", "1199000939", "1199000979",
+						"1199001211", "1199002573", "1199002653", "1199003126", "1199055399",
+						"1199055481", "1199055514", "1199055551", "1199204982", "1199213187",
+						"1199213210", "1202600487", "1199213265", "1199213291", "1199213345",
+						"1199213499", "1199213515", "1199213585", "1199213648", "1199213685",
+						"1199213742", "1199213860", "1199213905", "1201413946", "1201413990",
+						"1201414055", "1201414118", "1201414175", "1201414227", "1201414262",
+						"1201414307", "1201414378", "1201414598", "1201487451", "1201487791",
+						"1201488136", "1201488176", "1201496529", "1201514991", "1201515048",
+						"1201515091", "1201515134", "1201515182", "1201515279", "1201515710",
+						"1201515748", "1203011913", "1203011929", "1203011949", "1203011967",
+						"1203012011", "1203012070", "1203012095", "1203012108", "1203012176",
+						"1203012253", "1203012312", "1203012334", "1203012359", "1203012366",
+						"1203012390", "1203012487", "1203013652", "1203013664", "1203341044",
+						"1203341087", "1203341130", "1203341189", "1203341259", "1203341296",
+						"1203341420", "1203341446", "1203341560", "1203341613", "1203341619",
+						"1203341644", "1203341778", "1203341828", "1203342004", "1203342133",
+						"1203345493", "1203345514", "1203557131", "1203557159", "1203557234",
+						"1203557291", "1203557374", "1203557416", "1203557459", "1203557500",
+						"1203557599", "1203557764", "1203557844", "1203557882", "1203911696",
+						"1203911738", "1203911779", "1203911952", "1203912010", "1203912139",
+						"1203912207", "1203912253", "1203912309", "1203912348", "1203912418",
+						"1203912543", "1205029766", "1205029786", "1205029809", "1205029844",
+						"1205029867", "1205029892", "1205029925", "1205029961", "1205029974",
+						"1205030026", "1205030027", "1205030058", "1205030092", "1205030132",
+						"1205030138", "1205030145", "1205030185", "1205030205", "1205030266",
+						"1205030270", "1205030302", "1205030316", "1205030317", "1192874921",
+						"1195380947", "1195381014", "1195381111", "1195381269", "1195381340",
+						"1195381410", "1195381486", "1194036585", "1194037015", "1194037248",
+						"1194037573", "1194037836", "1194038037", "1194038373", "1194038545",
+						"1194038772", "1194039025", "1194040375", "1194040851", "1194041085",
+						"1194041210", "1194041436", "1196878503", "1196878591", "1199854485",
+						"1199055666", "1199491524", "1199491635", "1199491879", "1199491909",
+						"1199055711", "1199055744", "1195110516", "1195110555", "1199492137",
+						"1199055813", "1199492170", "1199492195", "1200192688", "1200192731",
+						"1199492465", "1199492488", "1199492532", "1200192877", "1200192973",
+						"1200193040", "1200193092", "1200421382", "1200421429", "1200421473",
+						"1200421562", "1205230905", "1205230933", "1205230993", "1205231012",
+						"1205231040", "1205231066", "1205231111", "1205231133", "1205231158",
+						"1205231183", "1205231218", "1205277135", "1205277146", "1202095610",
+						"1195381603", "1195381690", "1199055950", "1195381915", "1195381822",
+						"1200775929", "1195110598", "1199056039", "1199056071"
 					];
 
-					const videoGrid = document.getElementById('video-grid');
-					const loadingSpinner = document.getElementById('loading-spinner');
-					const searchInput = document.getElementById('video-search');
+					// Clean array from potential dashboard links or structural non-video IDs
+					const videoIds = [...new Set(rawVideoIds.filter(id => id !== "109862882"))];
 
-					// Function to clean up Vimeo automated/raw system titles
-					function cleanTitle(rawTitle, fallbackId) {
-						if (!rawTitle) return `Clinical Scenario ${fallbackId}`;
-						
+					const searchInput = document.getElementById('video-search');
+					const progressWrapper = document.getElementById('progress-wrapper');
+					const progressBar = document.getElementById('progress-bar');
+					const progressText = document.getElementById('progress-text');
+					const progressSubtext = document.getElementById('progress-subtext');
+
+					// Accordion UI Interactions
+					document.querySelectorAll('.accordion-header').forEach(header => {
+						header.addEventListener('click', function() {
+							const parent = this.parentElement;
+							parent.classList.toggle('active');
+						});
+					});
+
+					// Metadata Title Cleaning
+					function cleanTitle(rawTitle, id) {
+						if (!rawTitle) return `Clinical Scenario ${id}`;
 						let title = rawTitle;
-						
-						// Remove automated upload text blocks
 						title = title.replace(/Your video/gi, '');
 						title = title.replace(/is now ready/gi, '');
 						title = title.replace(/Copy of/gi, '');
-						
-						// Replace underscores and multiple spaces
 						title = title.replace(/_+/g, ' ');
 						title = title.replace(/\s+/g, ' ');
-						
-						// Trim whitespace
 						title = title.trim();
-						
-						// Capitalize first letter of each word
 						return title.replace(/\b\w/g, c => c.toUpperCase());
 					}
 
-					// Fetch metadata for a single video ID from Vimeo oEmbed endpoint
-					async function fetchVideoMetadata(id) {
-						try {
-							const response = await fetch(`https://vimeo.com/api/oembed.json?url=https://vimeo.com/${id}`);
-							if (!response.ok) throw new Error('Network error');
-							const data = await response.json();
-							return {
-								id: id,
-								title: cleanTitle(data.title, id)
-							};
-						} catch (error) {
-							// Return dynamic fallback if public oEmbed details are blocked or private
-							return {
-								id: id,
-								title: `Clinical Video (ID: ${id})`
-							};
+					// Dynamic Automatic Categorizer (Matches title content with PDF Chapter Structures)
+					function determineChapterId(cleanTitleText) {
+						const title = cleanTitleText.toLowerCase();
+						
+						// Chapter 1: General Principles, History, Communication
+						if (title.includes("communication") || title.includes("history") || title.includes("shared decision") || 
+							title.includes("rules of") || title.includes("ethical") || title.includes("triage") || 
+							title.includes("assessment") || title.includes("consultation") || title.includes("consent") ||
+							title.includes("prescribing") || title.includes("mistake") || title.includes("error") || 
+							title.includes("blueprint") || title.includes("nine steps") || title.includes("rules")) {
+							return "ch1";
 						}
+
+						// Chapter 2: Infections & Fevers
+						if (title.includes("fever") || title.includes("malaria") || title.includes("hepatitis") || 
+							title.includes("jaundice") || title.includes("measles") || title.includes("hiv") || 
+							title.includes("tb") || title.includes("tuberculosis") || title.includes("infection") || 
+							title.includes("sepsis") || title.includes("shingles") || title.includes("typhoid") || 
+							title.includes("appendix 35")) {
+							return "ch2";
+						}
+
+						// Chapter 3: Lung, Airway, Chest, Cardiac & Heart
+						if (title.includes("cough") || title.includes("breathing") || title.includes("respiratory") || 
+							title.includes("asthma") || title.includes("pneumonia") || title.includes("lung") || 
+							title.includes("chest") || title.includes("heart") || title.includes("stroke") || 
+							title.includes("blood pressure") || title.includes("hypertension") || title.includes("cardiac") ||
+							title.includes("pulse") || title.includes("cardio") || title.includes("respiratory quiz")) {
+							return "ch3";
+						}
+
+						// Chapter 4: Nutrition, Diet, Metabolic & Sleep
+						if (title.includes("diet") || title.includes("nutrition") || title.includes("sleep") || 
+							title.includes("cbti") || title.includes("restful") || title.includes("lifestyle") || 
+							title.includes("wellbeing") || title.includes("diabetes") || title.includes("metabolic")) {
+							return "ch4";
+						}
+
+						// Chapter 5: Pediatrics & Under 5 Child Health
+						if (title.includes("child") || title.includes("under 5") || title.includes("paediatric") || 
+							title.includes("baby") || title.includes("infant") || title.includes("under five") || 
+							title.includes("immunisation") || title.includes("measles treatment")) {
+							return "ch5";
+						}
+
+						// Chapter 6: Maternal, Sexual & Gynae Health
+						if (title.includes("maternal") || title.includes("pregnancy") || title.includes("gynae") || 
+							title.includes("sexual") || title.includes("contraception") || title.includes("adolescent") ||
+							title.includes("obstetric")) {
+							return "ch6";
+						}
+
+						// Default to Chapter 7: Other Practice Scenarios & System-level modules
+						return "ch7";
 					}
 
-					// Core initializer
-					async function loadVideos() {
-						// Fetch all metadata asynchronously in parallel for speed
-						const fetchPromises = videoIds.map(id => fetchVideoMetadata(id));
-						const results = await Promise.all(fetchPromises);
-						
-						// Sort results using natural alphanumeric sorting
-						results.sort((a, b) => a.title.localeCompare(b.title, undefined, { 
+					// Metred Async Batch Fetch to prevent Vimeo oEmbed Server rate-limiting
+					async function fetchMetadataInBatches(ids, batchSize = 6) {
+						const loadedMetadata = [];
+						let processedCount = 0;
+
+						for (let i = 0; i < ids.length; i += batchSize) {
+							const batch = ids.slice(i, i + batchSize);
+							const promises = batch.map(async (id) => {
+								try {
+									const response = await fetch(`https://vimeo.com/api/oembed.json?url=https://vimeo.com/${id}`);
+									if (!response.ok) throw new Error('API Blocked');
+									const data = await response.json();
+									return {
+										id: id,
+										title: cleanTitle(data.title, id),
+										thumbnail: data.thumbnail_url
+									};
+								} catch (e) {
+									// High-performance generic fallback when Vimeo limit triggers
+									return {
+										id: id,
+										title: `Clinical Video (ID: ${id})`,
+										thumbnail: ""
+									};
+								}
+							});
+
+							const batchResults = await Promise.all(promises);
+							loadedMetadata.push(...batchResults);
+							processedCount += batch.length;
+
+							// Display real-time progress to medical officer
+							const percent = Math.min(100, Math.floor((processedCount / ids.length) * 100));
+							progressBar.style.width = `${percent}%`;
+							progressText.textContent = `Loading Database: ${percent}% Complete`;
+							progressSubtext.textContent = `Fetched ${processedCount} of ${ids.length} training modules...`;
+
+							// Minute pacing delay to allow Vimeo's API buffer to breath
+							await new Promise(resolve => setTimeout(resolve, 80));
+						}
+
+						return loadedMetadata;
+					}
+
+					// Core Engine Execution
+					async function loadAndOrganiseVideos() {
+						const rawData = await fetchMetadataInBatches(videoIds);
+
+						// Natural Alphanumeric Sort over all collected datasets
+						rawData.sort((a, b) => a.title.localeCompare(b.title, undefined, { 
 							numeric: true, 
 							sensitivity: 'base' 
 						}));
 
-						// Build the HTML template on-the-fly
-						results.forEach(video => {
-							const article = document.createElement('article');
-							article.className = 'video-item';
-							article.innerHTML = `
-								<div class="video-container">
-									<iframe src="https://player.vimeo.com/video/${video.id}?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" allow="autoplay; fullscreen; picture-in-picture" title="${video.title}"></iframe>
-								</div>
-								<h3>${video.title}</h3>
-							`;
-							videoGrid.appendChild(article);
+						// Track counts dynamically for accordion headers
+						const chapterCounts = { ch1: 0, ch2: 0, ch3: 0, ch4: 0, ch5: 0, ch6: 0, ch7: 0 };
+
+						// Dynamically build lazily initialized post items
+						rawData.forEach(video => {
+							const targetChapter = determineChapterId(video.title);
+							chapterCounts[targetChapter]++;
+
+							const targetGrid = document.getElementById(`grid-${targetChapter}`);
+							if (targetGrid) {
+								const article = document.createElement('article');
+								article.className = 'video-item';
+								
+								// Clean fallback image
+								const thumbSrc = video.thumbnail || "images/pic10.jpg";
+
+								article.innerHTML = `
+									<div class="video-wrapper" data-id="${video.id}" data-title="${video.title}">
+										<img src="${thumbSrc}" alt="${video.title}" />
+										<div class="play-overlay">
+											<svg viewBox="0 0 24 24">
+												<path d="M8 5v14l11-7z"/>
+											</svg>
+										</div>
+									</div>
+									<h3>${video.title}</h3>
+								`;
+
+								// Iframe lazy load listener (swaps thumbnail on click so the video plays without reloading)
+								const wrapper = article.querySelector('.video-wrapper');
+								wrapper.addEventListener('click', function() {
+									const videoId = this.getAttribute('data-id');
+									const videoTitle = this.getAttribute('data-title');
+									this.innerHTML = `
+										<iframe src="https://player.vimeo.com/video/${videoId}?autoplay=1&badge=0&autopause=0&player_id=0&app_id=58479" 
+												allow="autoplay; fullscreen; picture-in-picture" 
+												title="${videoTitle}" 
+												allowfullscreen></iframe>
+									`;
+								});
+
+								targetGrid.appendChild(article);
+							}
 						});
 
-						// Transition out spinner and display grid
-						loadingSpinner.style.display = 'none';
-						videoGrid.style.display = 'grid';
+						// Write total counts dynamically into accordion badges
+						for (const chId in chapterCounts) {
+							const badge = document.getElementById(`badge-${chId}`);
+							if (badge) {
+								badge.textContent = `${chapterCounts[chId]} Videos`;
+								// Hide empty chapters entirely to keep layout clean
+								if (chapterCounts[chId] === 0) {
+									document.getElementById(chId).style.display = 'none';
+								}
+							}
+						}
+
+						// Hide loading screen and enable search feature
+						progressWrapper.style.display = 'none';
 						searchInput.disabled = false;
-						searchInput.placeholder = `🔍 Search ${results.length} videos...`;
+						searchInput.placeholder = `🔍 Search ${rawData.length} medical videos dynamically...`;
+
+						// Auto-expand the first chapter that has videos
+						for (const chId in chapterCounts) {
+							if (chapterCounts[chId] > 0) {
+								document.getElementById(chId).classList.add('active');
+								break;
+							}
+						}
 					}
 
 					// Search Filter Logic
 					searchInput.addEventListener('input', function() {
 						const filterValue = searchInput.value.toLowerCase().trim();
-						const videoItems = document.querySelectorAll('.video-item');
+						const accordions = document.querySelectorAll('.chapter-accordion');
 
-						videoItems.forEach(function(item) {
-							const videoTitle = item.querySelector('h3').textContent.toLowerCase();
-							if (videoTitle.includes(filterValue)) {
-								item.style.display = 'block';
+						accordions.forEach(accordion => {
+							const videoItems = accordion.querySelectorAll('.video-item');
+							let matchingCount = 0;
+
+							videoItems.forEach(item => {
+								const title = item.querySelector('h3').textContent.toLowerCase();
+								if (title.includes(filterValue)) {
+									item.style.display = 'block';
+									matchingCount++;
+								} else {
+									item.style.display = 'none';
+								}
+							});
+
+							// UI Auto-expansion logic when query is keyed in
+							if (filterValue !== "") {
+								if (matchingCount > 0) {
+									accordion.style.display = 'block';
+									accordion.classList.add('active');
+								} else {
+									accordion.style.display = 'none';
+									accordion.classList.remove('active');
+								}
 							} else {
-								item.style.display = 'none';
+								// Restore regular display if query empty
+								accordion.style.display = 'block';
+								// Check if any items inside, otherwise hide
+								const gridId = accordion.querySelector('.video-grid').id;
+								const badgeText = accordion.querySelector('.video-badge').textContent;
+								if (badgeText.startsWith("0 ")) {
+									accordion.style.display = 'none';
+								}
 							}
 						});
 					});
 
-					// Trigger load
-					loadVideos();
+					// Fire Loading loop
+					loadAndOrganiseVideos();
 				});
 			</script>
 
