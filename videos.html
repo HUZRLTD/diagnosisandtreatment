@@ -12,31 +12,52 @@
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 		<style>
-			/* Explicit overrides for the theme columns inside the category grids */
-			.video-grid {
-				display: grid !important;
-				grid-template-columns: repeat(2, 1fr) !important;
-				column-gap: 3em !important;
-				row-gap: 3em !important;
-				margin: 1.5em 0 2em 0 !important;
-				min-height: 50px;
+			/* Responsive Vimeo Container */
+			.video-container {
+				position: relative;
+				padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+				height: 0;
+				overflow: hidden;
+				max-width: 100%;
+				background: #000;
+				border-radius: 0.375em;
+				margin-bottom: 1.5em;
+				box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+			}
+			.video-container iframe {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				border: 0;
 			}
 			
-			.video-grid .video-item {
-				width: auto !important;
-				margin: 0 !important;
+			/* Explicitly define the flat video grid layout and override theme conflicts */
+			#video-grid {
+				display: grid !important; /* Forces layout overrides */
+				grid-template-columns: repeat(2, 1fr) !important; /* Exactly 2 columns on desktop */
+				column-gap: 3em !important;
+				row-gap: 3em !important;
+				margin: 1.5em 0 3em 0 !important;
+			}
+			
+			#video-grid .video-item {
+				width: auto !important; /* OVERRIDES theme's width calculation which was squishing the video */
+				margin: 0 !important; /* OVERRIDES theme's margin offsets */
 				padding: 0 !important;
 				transition: all 0.3s ease;
 			}
 			
+			/* Responsive breakpoint matching Editorial theme width constraints */
 			@media screen and (max-width: 980px) {
-				.video-grid {
-					grid-template-columns: 1fr !important;
+				#video-grid {
+					grid-template-columns: 1fr !important; /* 1 column on mobile and small tablets */
 					row-gap: 2em !important;
 				}
 			}
 
-			/* Customized Interactive Thumbnail & Play Overlay */
+			/* Interactive Thumbnail & Play Overlay */
 			.video-wrapper {
 				position: relative;
 				padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
@@ -70,7 +91,7 @@
 				border: 0;
 			}
 			
-			/* Theme matching red play button overlay */
+			/* Theme matching red play button overlay overlay */
 			.play-overlay {
 				position: absolute;
 				top: 50%;
@@ -166,62 +187,30 @@
 				background: #2ecc71;
 				animation: none;
 			}
-
-			/* Chapter Collapsible Accordions */
-			.chapter-accordion {
-				border: 1px solid #efefef;
-				border-radius: 0.375em;
-				margin-bottom: 1.25em;
-				background: #fafafa;
-				overflow: hidden;
-			}
-			.accordion-header {
-				width: 100%;
-				background: #fff;
+			/* Theme matching force cache reset button */
+			.sync-status button {
+				background: none !important;
 				border: none !important;
 				box-shadow: none !important;
-				padding: 1.25em 1.75em !important;
-				text-align: left;
+				color: #f56a6a !important;
 				cursor: pointer;
-				display: flex;
-				justify-content: space-between;
-				align-items: center;
-				transition: background 0.2s ease;
-				outline: none;
+				padding: 0 !important;
+				margin-left: 0.5em;
+				font-size: 0.9em;
+				font-weight: 700;
+				text-decoration: underline;
+				display: inline-block;
+				height: auto;
+				line-height: normal;
 			}
-			.accordion-header:hover {
-				background: #fcfcfc;
-			}
-			.accordion-header h3 {
-				margin: 0 !important;
-				font-size: 1.15em;
-				color: #3d4449;
-				display: flex;
-				align-items: center;
-				gap: 0.75em;
-			}
-			.accordion-header .video-badge {
-				background: #7f8c8d;
-				color: #fff;
-				font-size: 0.8em;
-				padding: 0.25em 0.8em;
-				border-radius: 10px;
-				font-weight: 600;
-			}
-			.accordion-content {
-				display: none; /* Controlled via script toggle */
-				padding: 1.75em;
-				background: #fff;
-				border-top: 1px solid #efefef;
-			}
-			.chapter-accordion.active .accordion-content {
-				display: block;
+			.sync-status button:hover {
+				color: #3f3f3f !important;
 			}
 
-			/* Disclaimer Layout adjustments */
+			/* Disclaimer Box Styling */
 			.disclaimer-box {
 				border: 1px solid #dbdbdb;
-				border-left: 4px solid #f56a6a;
+				border-left: 4px solid #f56a6a; /* Theme main color accent */
 				background-color: rgba(245, 106, 106, 0.02);
 				padding: 1.75em;
 				border-radius: 0.375em;
@@ -290,112 +279,17 @@
 										</div>
 										<div class="sync-status" id="sync-container">
 											<div class="sync-dot"></div>
-											<span id="sync-text">Indexing videos (0%)...</span>
+											<span id="sync-text">Syncing library (0%)...</span>
 										</div>
 									</div>
 
-									<!-- Accordion Group Layout -->
-									<div class="chapters-wrapper">
-										
-										<!-- Chapter 1 -->
-										<div class="chapter-accordion active" id="ch1">
-											<button class="accordion-header">
-												<h3><span class="icon solid fa-comments"></span> Chapter 1: History, Communication &amp; Principles</h3>
-												<span class="video-badge" id="badge-ch1">0 Videos</span>
-											</button>
-											<div class="accordion-content">
-												<div class="video-grid" id="grid-ch1">
-													<!-- Skeletons populated instantly on load -->
-													<div class="skeleton-card"><div class="skeleton-video"></div><div class="skeleton-text"></div></div>
-													<div class="skeleton-card"><div class="skeleton-video"></div><div class="skeleton-text"></div></div>
-												</div>
-											</div>
-										</div>
-
-										<!-- Chapter 2 -->
-										<div class="chapter-accordion" id="ch2">
-											<button class="accordion-header">
-												<h3><span class="icon solid fa-microscope"></span> Chapter 2: Infectious Diseases &amp; Fevers</h3>
-												<span class="video-badge" id="badge-ch2">0 Videos</span>
-											</button>
-											<div class="accordion-content">
-												<div class="video-grid" id="grid-ch2">
-													<div class="skeleton-card"><div class="skeleton-video"></div><div class="skeleton-text"></div></div>
-													<div class="skeleton-card"><div class="skeleton-video"></div><div class="skeleton-text"></div></div>
-												</div>
-											</div>
-										</div>
-
-										<!-- Chapter 3 -->
-										<div class="chapter-accordion" id="ch3">
-											<button class="accordion-header">
-												<h3><span class="icon solid fa-lungs"></span> Chapter 3: Respiratory &amp; Cardio</h3>
-												<span class="video-badge" id="badge-ch3">0 Videos</span>
-											</button>
-											<div class="accordion-content">
-												<div class="video-grid" id="grid-ch3">
-													<div class="skeleton-card"><div class="skeleton-video"></div><div class="skeleton-text"></div></div>
-													<div class="skeleton-card"><div class="skeleton-video"></div><div class="skeleton-text"></div></div>
-												</div>
-											</div>
-										</div>
-
-										<!-- Chapter 4 -->
-										<div class="chapter-accordion" id="ch4">
-											<button class="accordion-header">
-												<h3><span class="icon solid fa-apple-alt"></span> Chapter 4: Nutrition, Lifestyle &amp; Sleep</h3>
-												<span class="video-badge" id="badge-ch4">0 Videos</span>
-											</button>
-											<div class="accordion-content">
-												<div class="video-grid" id="grid-ch4">
-													<div class="skeleton-card"><div class="skeleton-video"></div><div class="skeleton-text"></div></div>
-													<div class="skeleton-card"><div class="skeleton-video"></div><div class="skeleton-text"></div></div>
-												</div>
-											</div>
-										</div>
-
-										<!-- Chapter 5 -->
-										<div class="chapter-accordion" id="ch5">
-											<button class="accordion-header">
-												<h3><span class="icon solid fa-baby"></span> Chapter 5: Pediatrics &amp; Under 5s</h3>
-												<span class="video-badge" id="badge-ch5">0 Videos</span>
-											</button>
-											<div class="accordion-content">
-												<div class="video-grid" id="grid-ch5">
-													<div class="skeleton-card"><div class="skeleton-video"></div><div class="skeleton-text"></div></div>
-													<div class="skeleton-card"><div class="skeleton-video"></div><div class="skeleton-text"></div></div>
-												</div>
-											</div>
-										</div>
-
-										<!-- Chapter 6 -->
-										<div class="chapter-accordion" id="ch6">
-											<button class="accordion-header">
-												<h3><span class="icon solid fa-venus-mars"></span> Chapter 6: Maternal, Gynecologic &amp; Adolescent Health</h3>
-												<span class="video-badge" id="badge-ch6">0 Videos</span>
-											</button>
-											<div class="accordion-content">
-												<div class="video-grid" id="grid-ch6">
-													<div class="skeleton-card"><div class="skeleton-video"></div><div class="skeleton-text"></div></div>
-													<div class="skeleton-card"><div class="skeleton-video"></div><div class="skeleton-text"></div></div>
-												</div>
-											</div>
-										</div>
-
-										<!-- Chapter 7 -->
-										<div class="chapter-accordion" id="ch7">
-											<button class="accordion-header">
-												<h3><span class="icon solid fa-user-md"></span> Chapter 7: Other Clinical Practice Scenarios</h3>
-												<span class="video-badge" id="badge-ch7">0 Videos</span>
-											</button>
-											<div class="accordion-content">
-												<div class="video-grid" id="grid-ch7">
-													<div class="skeleton-card"><div class="skeleton-video"></div><div class="skeleton-text"></div></div>
-													<div class="skeleton-card"><div class="skeleton-video"></div><div class="skeleton-text"></div></div>
-												</div>
-											</div>
-										</div>
-
+									<!-- Flat Video Grid (Populated dynamically with alphabetical sorting) -->
+									<div class="posts" id="video-grid">
+										<!-- Temporary placeholders while silent sync resolves -->
+										<div class="skeleton-card"><div class="skeleton-video"></div><div class="skeleton-text"></div></div>
+										<div class="skeleton-card"><div class="skeleton-video"></div><div class="skeleton-text"></div></div>
+										<div class="skeleton-card"><div class="skeleton-video"></div><div class="skeleton-text"></div></div>
+										<div class="skeleton-card"><div class="skeleton-video"></div><div class="skeleton-text"></div></div>
 									</div>
 
 								</section>
@@ -440,7 +334,7 @@
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
 
-			<!-- Dynamic Vimeo Video Loader, Smart Categorizer & Natural Sort -->
+			<!-- Dynamic Vimeo Video Loader & Live Filter -->
 			<script>
 				document.addEventListener('DOMContentLoaded', function() {
 					// Complete 284 unique Vimeo IDs derived cleanly from repository logs
@@ -504,20 +398,18 @@
 						"1200775929", "1195110598", "1199056039", "1199056071"
 					];
 
-					// Clean array from potential dashboard links or structural non-video IDs
+					// Clean array
 					const videoIds = [...new Set(rawVideoIds.filter(id => id !== "109862882"))];
 
 					const searchInput = document.getElementById('video-search');
+					const videoGrid = document.getElementById('video-grid');
 					const syncContainer = document.getElementById('sync-container');
 					const syncText = document.getElementById('sync-text');
 
-					// Accordion UI Interactions
-					document.querySelectorAll('.accordion-header').forEach(header => {
-						header.addEventListener('click', function() {
-							const parent = this.parentElement;
-							parent.classList.toggle('active');
-						});
-					});
+					// Cache settings (24 hours)
+					const CACHE_KEY = "diagnosis_treatment_vimeo_cache";
+					const TIMESTAMP_KEY = "diagnosis_treatment_vimeo_timestamp";
+					const CACHE_DURATION = 24 * 60 * 60 * 1000; 
 
 					// Metadata Title Cleaning
 					function cleanTitle(rawTitle, id) {
@@ -530,62 +422,6 @@
 						title = title.replace(/\s+/g, ' ');
 						title = title.trim();
 						return title.replace(/\b\w/g, c => c.toUpperCase());
-					}
-
-					// Dynamic Automatic Categorizer (Matches title content with PDF Chapter Structures)
-					function determineChapterId(cleanTitleText) {
-						const title = cleanTitleText.toLowerCase();
-						
-						// Chapter 1: General Principles, History, Communication
-						if (title.includes("communication") || title.includes("history") || title.includes("shared decision") || 
-							title.includes("rules of") || title.includes("ethical") || title.includes("triage") || 
-							title.includes("assessment") || title.includes("consultation") || title.includes("consent") ||
-							title.includes("prescribing") || title.includes("mistake") || title.includes("error") || 
-							title.includes("blueprint") || title.includes("nine steps") || title.includes("rules")) {
-							return "ch1";
-						}
-
-						// Chapter 2: Infections & Fevers
-						if (title.includes("fever") || title.includes("malaria") || title.includes("hepatitis") || 
-							title.includes("jaundice") || title.includes("measles") || title.includes("hiv") || 
-							title.includes("tb") || title.includes("tuberculosis") || title.includes("infection") || 
-							title.includes("sepsis") || title.includes("shingles") || title.includes("typhoid") || 
-							title.includes("appendix 35")) {
-							return "ch2";
-						}
-
-						// Chapter 3: Lung, Airway, Chest, Cardiac & Heart
-						if (title.includes("cough") || title.includes("breathing") || title.includes("respiratory") || 
-							title.includes("asthma") || title.includes("pneumonia") || title.includes("lung") || 
-							title.includes("chest") || title.includes("heart") || title.includes("stroke") || 
-							title.includes("blood pressure") || title.includes("hypertension") || title.includes("cardiac") ||
-							title.includes("pulse") || title.includes("cardio") || title.includes("respiratory quiz")) {
-							return "ch3";
-						}
-
-						// Chapter 4: Nutrition, Diet, Metabolic & Sleep
-						if (title.includes("diet") || title.includes("nutrition") || title.includes("sleep") || 
-							title.includes("cbti") || title.includes("restful") || title.includes("lifestyle") || 
-							title.includes("wellbeing") || title.includes("diabetes") || title.includes("metabolic")) {
-							return "ch4";
-						}
-
-						// Chapter 5: Pediatrics & Under 5 Child Health
-						if (title.includes("child") || title.includes("under 5") || title.includes("paediatric") || 
-							title.includes("baby") || title.includes("infant") || title.includes("under five") || 
-							title.includes("immunisation") || title.includes("measles treatment")) {
-							return "ch5";
-						}
-
-						// Chapter 6: Maternal, Sexual & Gynae Health
-						if (title.includes("maternal") || title.includes("pregnancy") || title.includes("gynae") || 
-							title.includes("sexual") || title.includes("contraception") || title.includes("adolescent") ||
-							title.includes("obstetric")) {
-							return "ch6";
-						}
-
-						// Default to Chapter 7: Other Practice Scenarios & System-level modules
-						return "ch7";
 					}
 
 					// Metred Async Batch Fetch to prevent Vimeo oEmbed Server rate-limiting
@@ -606,7 +442,6 @@
 										thumbnail: data.thumbnail_url
 									};
 								} catch (e) {
-									// High-performance generic fallback when Vimeo limit triggers
 									return {
 										id: id,
 										title: `Clinical Video (ID: ${id})`,
@@ -619,7 +454,6 @@
 							loadedMetadata.push(...batchResults);
 							processedCount += batch.length;
 
-							// Display real-time progress silently in the badge next to search
 							const percent = Math.min(100, Math.floor((processedCount / ids.length) * 100));
 							syncText.textContent = `Syncing library (${percent}%)...`;
 
@@ -630,120 +464,107 @@
 						return loadedMetadata;
 					}
 
-					// Core Engine Execution
+					// Render items to the grid layout
+					function renderVideos(rawData) {
+						// Clear skeletal cards or old elements
+						videoGrid.innerHTML = '';
+
+						rawData.forEach(video => {
+							const article = document.createElement('article');
+							article.className = 'video-item';
+							const thumbSrc = video.thumbnail || "images/pic10.jpg";
+
+							article.innerHTML = `
+								<div class="video-wrapper" data-id="${video.id}" data-title="${video.title}">
+									<img src="${thumbSrc}" alt="${video.title}" />
+									<div class="play-overlay">
+										<svg viewBox="0 0 24 24">
+											<path d="M8 5v14l11-7z"/>
+										</svg>
+									</div>
+								</div>
+								<h3>${video.title}</h3>
+							`;
+
+							// Swaps thumbnail on play click
+							const wrapper = article.querySelector('.video-wrapper');
+							wrapper.addEventListener('click', function() {
+								const videoId = this.getAttribute('data-id');
+								const videoTitle = this.getAttribute('data-title');
+								this.innerHTML = `
+									<iframe src="https://player.vimeo.com/video/${videoId}?autoplay=1&badge=0&autopause=0&player_id=0&app_id=58479" 
+											allow="autoplay; fullscreen; picture-in-picture" 
+											title="${videoTitle}" 
+											allowfullscreen></iframe>
+								`;
+							});
+
+							videoGrid.appendChild(article);
+						});
+					}
+
+					// Clears storage caches and triggers standard fresh sync
+					window.forceRefreshCache = function() {
+						localStorage.removeItem(CACHE_KEY);
+						localStorage.removeItem(TIMESTAMP_KEY);
+						location.reload();
+					};
+
+					// Core Loader Execution
 					async function loadAndOrganiseVideos() {
+						const cachedData = localStorage.getItem(CACHE_KEY);
+						const cachedTime = localStorage.getItem(TIMESTAMP_KEY);
+						const now = Date.now();
+
+						// 1. Instantly use cache if present and unexpired
+						if (cachedData && cachedTime && (now - cachedTime < CACHE_DURATION)) {
+							const parsedData = JSON.parse(cachedData);
+							renderVideos(parsedData);
+							
+							// Display cache status and provide manual update link
+							syncContainer.classList.add('done');
+							syncText.innerHTML = `Loaded from cache (${parsedData.length} videos) <button onclick="forceRefreshCache()">Force Sync</button>`;
+							return;
+						}
+
+						// 2. Otherwise run background metered fetch
 						const rawData = await fetchMetadataInBatches(videoIds);
 
-						// Natural Alphanumeric Sort over all collected datasets
+						// Natural Alphanumeric Sort (A to Z mathematically)
 						rawData.sort((a, b) => a.title.localeCompare(b.title, undefined, { 
 							numeric: true, 
 							sensitivity: 'base' 
 						}));
 
-						// Clear skeleton cards inside grids
-						document.querySelectorAll('.video-grid').forEach(grid => {
-							grid.innerHTML = '';
-						});
-
-						// Track counts dynamically for accordion headers
-						const chapterCounts = { ch1: 0, ch2: 0, ch3: 0, ch4: 0, ch5: 0, ch6: 0, ch7: 0 };
-
-						// Dynamically build lazily initialized post items
-						rawData.forEach(video => {
-							const targetChapter = determineChapterId(video.title);
-							chapterCounts[targetChapter]++;
-
-							const targetGrid = document.getElementById(`grid-${targetChapter}`);
-							if (targetGrid) {
-								const article = document.createElement('article');
-								article.className = 'video-item';
-								
-								// Clean fallback image
-								const thumbSrc = video.thumbnail || "images/pic10.jpg";
-
-								article.innerHTML = `
-									<div class="video-wrapper" data-id="${video.id}" data-title="${video.title}">
-										<img src="${thumbSrc}" alt="${video.title}" />
-										<div class="play-overlay">
-											<svg viewBox="0 0 24 24">
-												<path d="M8 5v14l11-7z"/>
-											</svg>
-										</div>
-									</div>
-									<h3>${video.title}</h3>
-								`;
-
-								// Iframe lazy load listener (swaps thumbnail on click so the video plays without reloading)
-								const wrapper = article.querySelector('.video-wrapper');
-								wrapper.addEventListener('click', function() {
-									const videoId = this.getAttribute('data-id');
-									const videoTitle = this.getAttribute('data-title');
-									this.innerHTML = `
-										<iframe src="https://player.vimeo.com/video/${videoId}?autoplay=1&badge=0&autopause=0&player_id=0&app_id=58479" 
-												allow="autoplay; fullscreen; picture-in-picture" 
-												title="${videoTitle}" 
-												allowfullscreen></iframe>
-									`;
-								});
-
-								targetGrid.appendChild(article);
-							}
-						});
-
-						// Write total counts dynamically into accordion badges
-						for (const chId in chapterCounts) {
-							const badge = document.getElementById(`badge-${chId}`);
-							if (badge) {
-								badge.textContent = `${chapterCounts[chId]} Videos`;
-								// Hide empty chapters entirely to keep layout clean
-								if (chapterCounts[chId] === 0) {
-									document.getElementById(chId).style.display = 'none';
-								}
-							}
+						// Save to browser cache storage
+						try {
+							localStorage.setItem(CACHE_KEY, JSON.stringify(rawData));
+							localStorage.setItem(TIMESTAMP_KEY, now.toString());
+						} catch (e) {
+							console.warn("Local storage capacity limit reached. Running session load only.");
 						}
+
+						// Display output grid
+						renderVideos(rawData);
 
 						// Update sync status indicator to done green state
 						syncContainer.classList.add('done');
-						syncText.textContent = `Library synced (${rawData.length} videos)`;
+						syncText.innerHTML = `Synced (${rawData.length} videos) <button onclick="forceRefreshCache()">Force Sync</button>`;
 					}
 
 					// Search Filter Logic
 					searchInput.addEventListener('input', function() {
 						const filterValue = searchInput.value.toLowerCase().trim();
-						const accordions = document.querySelectorAll('.chapter-accordion');
+						const videoItems = document.querySelectorAll('.video-item');
 
-						accordions.forEach(accordion => {
-							const videoItems = accordion.querySelectorAll('.video-item');
-							let matchingCount = 0;
-
-							videoItems.forEach(item => {
-								const title = item.querySelector('h3');
-								if (title) {
-									const titleText = title.textContent.toLowerCase();
-									if (titleText.includes(filterValue)) {
-										item.style.display = 'block';
-										matchingCount++;
-									} else {
-										item.style.display = 'none';
-									}
-								}
-							});
-
-							// UI Auto-expansion logic when query is keyed in
-							if (filterValue !== "") {
-								if (matchingCount > 0) {
-									accordion.style.display = 'block';
-									accordion.classList.add('active');
+						videoItems.forEach(item => {
+							const title = item.querySelector('h3');
+							if (title) {
+								const titleText = title.textContent.toLowerCase();
+								if (titleText.includes(filterValue)) {
+									item.style.display = 'block';
 								} else {
-									accordion.style.display = 'none';
-									accordion.classList.remove('active');
-								}
-							} else {
-								// Restore regular display if query empty
-								accordion.style.display = 'block';
-								const badgeText = accordion.querySelector('.video-badge').textContent;
-								if (badgeText.startsWith("0 ")) {
-									accordion.style.display = 'none';
+									item.style.display = 'none';
 								}
 							}
 						});
