@@ -32,9 +32,69 @@
 				height: 100%;
 				border: 0;
 			}
-			/* Slight styling refinement for video grid items */
+			/* Styling refinement for video grid items */
 			.posts article {
 				margin-bottom: 3em;
+				transition: opacity 0.2s ease;
+			}
+			/* Search input customized to match theme branding */
+			.search-filter-container {
+				margin-bottom: 3em;
+				max-width: 600px;
+				position: relative;
+			}
+			.search-filter-container input[type="text"] {
+				border-radius: 2em;
+				padding-left: 1.5em;
+				height: 3.25em;
+			}
+			/* Loading Spinner styles */
+			#loading-spinner {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				padding: 5em 0;
+				width: 100%;
+			}
+			.spinner {
+				width: 50px;
+				height: 50px;
+				border: 5px solid #f3f3f3;
+				border-top: 5px solid #f56a6a; /* Theme matching red accent color */
+				border-radius: 50%;
+				animation: spin 1s linear infinite;
+				margin-bottom: 1.5em;
+			}
+			@keyframes spin {
+				0% { transform: rotate(0deg); }
+				100% { transform: rotate(360deg); }
+			}
+			/* Disclaimer Box Styling */
+			.disclaimer-box {
+				border: 1px solid #dbdbdb;
+				border-left: 4px solid #f56a6a; /* Theme main color accent */
+				background-color: rgba(245, 106, 106, 0.02);
+				padding: 1.75em;
+				border-radius: 0.375em;
+				margin: 2em 0;
+			}
+			.disclaimer-box h3 {
+				color: #f56a6a;
+				margin-top: 0;
+				margin-bottom: 1em;
+				display: flex;
+				align-items: center;
+				gap: 0.5em;
+			}
+			.disclaimer-box p {
+				font-size: 0.9em;
+				line-height: 1.6em;
+				margin-bottom: 1em;
+			}
+			.disclaimer-box p:last-child {
+				margin-bottom: 0;
+				font-style: italic;
 			}
 		</style>
 	</head>
@@ -63,147 +123,31 @@
 
 									<p>These video resources are designed to support primary healthcare workers in developing clinical communication skills, mastering examination protocols, and implementing shared decision-making methodologies.</p>
 
+									<!-- Disclaimer Box -->
+									<div class="disclaimer-box">
+										<h3><span class="icon solid fa-exclamation-triangle"></span> Disclaimer</h3>
+										<p>The videos in this collection are provided for educational and informational purposes only. They are intended to support learning and should not be regarded as a substitute for professional medical advice, diagnosis, or treatment.</p>
+										<p>Although every effort has been made to ensure that the information presented is accurate and reflects current good practice at the time of production, medical knowledge and clinical guidelines evolve over time. Some videos may therefore contain information that has since been updated or superseded.</p>
+										<p>Healthcare professionals should always exercise their own independent clinical judgement and consult current local, national, and international guidelines before making diagnostic or treatment decisions.</p>
+										<p>Members of the public should not use these videos to diagnose or treat medical conditions. If you have concerns about your health, please seek advice from a qualified healthcare professional. In a medical emergency, contact your local emergency services immediately.</p>
+										<p>The content is provided "as is" without any warranties, express or implied. The creators, contributors, and publishers accept no liability for any loss, injury, or damage arising from the use of, or reliance on, the information contained in these videos.</p>
+									</div>
+
 									<hr class="major" />
 
-									<div class="posts">
-										
-										<!-- Video 1 -->
-										<article>
-											<div class="video-container">
-												<iframe src="https://player.vimeo.com/video/1192851999?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" allow="autoplay; fullscreen; picture-in-picture" title="Clinical Scenario 1"></iframe>
-											</div>
-											<h3>1. Triage</h3>
-										</article>
-
-										<!-- Video 2 -->
-										<article>
-											<div class="video-container">
-												<iframe src="https://player.vimeo.com/video/1192852121?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" allow="autoplay; fullscreen; picture-in-picture" title="Clinical Scenario 2"></iframe>
-											</div>
-											<h3>2. Severe Fever Management</h3>
-										</article>
-
-										<!-- Video 3 -->
-										<article>
-											<div class="video-container">
-												<iframe src="https://player.vimeo.com/video/1192852208?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" allow="autoplay; fullscreen; picture-in-picture" title="Clinical Scenario 3"></iframe>
-											</div>
-											<h3>3. Nine Steps of History Taking</h3>
-										</article>
-
-										<!-- Video 4 -->
-										<article>
-											<div class="video-container">
-												<iframe src="https://player.vimeo.com/video/1192852240?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" allow="autoplay; fullscreen; picture-in-picture" title="Clinical Scenario 4"></iframe>
-											</div>
-											<h3>4. 7 Rules of Communication</h3>
-										</article>
-
-										<!-- Video 5 -->
-										<article>
-											<div class="video-container">
-												<iframe src="https://player.vimeo.com/video/1192852277?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" allow="autoplay; fullscreen; picture-in-picture" title="Clinical Scenario 5"></iframe>
-											</div>
-											<h3>5. Pain</h3>
-										</article>
-
-										<!-- Video 6 -->
-										<article>
-											<div class="video-container">
-												<iframe src="https://player.vimeo.com/video/1192852316?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" allow="autoplay; fullscreen; picture-in-picture" title="Clinical Scenario 6"></iframe>
-											</div>
-											<h3>6. Shared Decision Making</h3>
-										</article>
-
-										<!-- Video 7 -->
-										<article>
-											<div class="video-container">
-												<iframe src="https://player.vimeo.com/video/1192852424?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" allow="autoplay; fullscreen; picture-in-picture" title="Clinical Scenario 7"></iframe>
-											</div>
-											<h3>7. Lifestyle Medicine Ward Round</h3>
-										</article>
-
-										<!-- Video 8 -->
-										<article>
-											<div class="video-container">
-												<iframe src="https://player.vimeo.com/video/1192852453?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" allow="autoplay; fullscreen; picture-in-picture" title="Clinical Scenario 8"></iframe>
-											</div>
-											<h3>8. Sexual & Adolescent Health</h3>
-										</article>
-
-										<!-- Video 9 -->
-										<article>
-											<div class="video-container">
-												<iframe src="https://player.vimeo.com/video/1192852494?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" allow="autoplay; fullscreen; picture-in-picture" title="Clinical Scenario 9"></iframe>
-											</div>
-											<h3>9. Cancer Prevention & Detection</h3>
-										</article>
-
-										<!-- Video 10 -->
-										<article>
-											<div class="video-container">
-												<iframe src="https://player.vimeo.com/video/1192852516?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" allow="autoplay; fullscreen; picture-in-picture" title="Clinical Scenario 10"></iframe>
-											</div>
-											<h3>10. Treatment of Measels</h3>
-										</article>
-
-										<!-- Video 11 -->
-										<article>
-											<div class="video-container">
-												<iframe src="https://player.vimeo.com/video/1192852538?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" allow="autoplay; fullscreen; picture-in-picture" title="Clinical Scenario 11"></iframe>
-											</div>
-											<h3>11. Rational Prescribing</h3>
-										</article>
-
-										<!-- Video 12 -->
-										<article>
-											<div class="video-container">
-												<iframe src="https://player.vimeo.com/video/1192852563?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" allow="autoplay; fullscreen; picture-in-picture" title="Clinical Scenario 12"></iframe>
-											</div>
-											<h3>12. Patient Communication</h3>
-										</article>
-
-										<!-- Video 13 -->
-										<article>
-											<div class="video-container">
-												<iframe src="https://player.vimeo.com/video/1192852605?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" allow="autoplay; fullscreen; picture-in-picture" title="Clinical Scenario 13"></iframe>
-											</div>
-											<h3>13. Rational Prescribing</h3>
-										</article>
-
-										<!-- Video 14 -->
-										<article>
-											<div class="video-container">
-												<iframe src="https://player.vimeo.com/video/1192852654?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" allow="autoplay; fullscreen; picture-in-picture" title="Clinical Scenario 14"></iframe>
-											</div>
-											<h3>14. Respiratory Quiz</h3>
-										</article>
-
-										<!-- Video 15 -->
-										<article>
-											<div class="video-container">
-												<iframe src="https://player.vimeo.com/video/1192852672?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" allow="autoplay; fullscreen; picture-in-picture" title="Clinical Scenario 15"></iframe>
-											</div>
-											<h3>15. Common Chest Illness</h3>
-										</article>
-
-										<!-- Video 16 -->
-										<article>
-											<div class="video-container">
-												<iframe src="https://player.vimeo.com/video/1192852710?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" allow="autoplay; fullscreen; picture-in-picture" title="Clinical Scenario 16"></iframe>
-											</div>
-											<h3>16. Chest Illness in Under 5s</h3>
-										</article>
-
-										<!-- Video 17 -->
-										<article>
-											<div class="video-container">
-												<iframe src="https://player.vimeo.com/video/1192874921?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" allow="autoplay; fullscreen; picture-in-picture" title="Clinical Scenario 17"></iframe>
-											</div>
-											<h3>Appendix 1. Child Cough & Breathing</h3>
-										</article>
-
+									<!-- Interactive Video Search Filter -->
+									<div class="search-filter-container">
+										<input type="text" id="video-search" placeholder="🔍 Search training videos..." disabled />
 									</div>
+
+									<!-- Loading Indicator -->
+									<div id="loading-spinner">
+										<div class="spinner"></div>
+										<p>Loading clinical video database from Vimeo...</p>
+									</div>
+
+									<!-- Video Grid (Populated dynamically) -->
+									<div class="posts" id="video-grid" style="display: none;"></div>
 
 								</section>
 
@@ -246,6 +190,121 @@
 			<script src="assets/js/breakpoints.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
+
+			<!-- Dynamic Vimeo Video Loader & Live Filter -->
+			<script>
+				document.addEventListener('DOMContentLoaded', function() {
+					// All 55 unique Vimeo IDs harvested from your repository dump
+					const videoIds = [
+						"1206382169", "1205541646", "1205541608", "1205365879", "1205365892",
+						"1192851999", "1192852121", "1196556893", "1192852208", "1192852240",
+						"1192852277", "1192852316", "1192852424", "1192852453", "1192852494",
+						"1192852516", "1192852538", "1192852563", "1192852605", "1192852654",
+						"1192852672", "1192852710", "1195379708", "1195379888", "1195379955",
+						"1195380027", "1195380090", "1195380165", "1195380261", "1195380320",
+						"1195380381", "1195380475", "1195380597", "1195380687", "1195380754",
+						"1195380844", "1196775745", "1196775894", "1196776066", "1196776148",
+						"1196776292", "1196776437", "1196776563", "1196776699", "1197110479",
+						"1197110537", "1197110626", "1197110716", "1197110784", "1197110850",
+						"1197110923", "1197110961", "1197111023", "1197799171", "1197799350"
+					];
+
+					const videoGrid = document.getElementById('video-grid');
+					const loadingSpinner = document.getElementById('loading-spinner');
+					const searchInput = document.getElementById('video-search');
+
+					// Function to clean up Vimeo automated/raw system titles
+					function cleanTitle(rawTitle, fallbackId) {
+						if (!rawTitle) return `Clinical Scenario ${fallbackId}`;
+						
+						let title = rawTitle;
+						
+						// Remove automated upload text blocks
+						title = title.replace(/Your video/gi, '');
+						title = title.replace(/is now ready/gi, '');
+						title = title.replace(/Copy of/gi, '');
+						
+						// Replace underscores and multiple spaces
+						title = title.replace(/_+/g, ' ');
+						title = title.replace(/\s+/g, ' ');
+						
+						// Trim whitespace
+						title = title.trim();
+						
+						// Capitalize first letter of each word
+						return title.replace(/\b\w/g, c => c.toUpperCase());
+					}
+
+					// Fetch metadata for a single video ID from Vimeo oEmbed endpoint
+					async function fetchVideoMetadata(id) {
+						try {
+							const response = await fetch(`https://vimeo.com/api/oembed.json?url=https://vimeo.com/${id}`);
+							if (!response.ok) throw new Error('Network error');
+							const data = await response.json();
+							return {
+								id: id,
+								title: cleanTitle(data.title, id)
+							};
+						} catch (error) {
+							// Return dynamic fallback if public oEmbed details are blocked or private
+							return {
+								id: id,
+								title: `Clinical Video (ID: ${id})`
+							};
+						}
+					}
+
+					// Core initializer
+					async function loadVideos() {
+						// Fetch all metadata asynchronously in parallel for speed
+						const fetchPromises = videoIds.map(id => fetchVideoMetadata(id));
+						const results = await Promise.all(fetchPromises);
+						
+						// FIXED: Sort results using natural alphanumeric sorting
+						results.sort((a, b) => a.title.localeCompare(b.title, undefined, { 
+							numeric: true, 
+							sensitivity: 'base' 
+						}));
+
+						// Build the HTML template on-the-fly
+						results.forEach(video => {
+							const article = document.createElement('article');
+							article.className = 'video-item';
+							article.innerHTML = `
+								<div class="video-container">
+									<iframe src="https://player.vimeo.com/video/${video.id}?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" allow="autoplay; fullscreen; picture-in-picture" title="${video.title}"></iframe>
+								</div>
+								<h3>${video.title}</h3>
+							`;
+							videoGrid.appendChild(article);
+						});
+
+						// Transition out spinner and display grid
+						loadingSpinner.style.display = 'none';
+						videoGrid.style.display = 'grid';
+						searchInput.disabled = false;
+						searchInput.placeholder = `🔍 Search ${results.length} videos...`;
+					}
+
+					// Search Filter Logic
+					searchInput.addEventListener('input', function() {
+						const filterValue = searchInput.value.toLowerCase().trim();
+						const videoItems = document.querySelectorAll('.video-item');
+
+						videoItems.forEach(function(item) {
+							const videoTitle = item.querySelector('h3').textContent.toLowerCase();
+							if (videoTitle.includes(filterValue)) {
+								item.style.display = 'block';
+							} else {
+								item.style.display = 'none';
+							}
+						});
+					});
+
+					// Trigger load
+					loadVideos();
+				});
+			</script>
 
 	</body>
 </html>
